@@ -26,8 +26,10 @@
             if (iframe && iframe.contentWindow && participantId !== 'NO_ID') {
                 // Plain object — forwarded directly as descriptor JSON to Unreal
                 iframe.contentWindow.postMessage({
-                    participant_id: participantId  // Direct key for easy parsing; or use { type: 'participant_id', value: participantId }
-                }, 'https://share.streampixel.io');
+                message: {
+                                participant_id: participantId   // Or { type: 'participant_id', value: participantId }
+                            }                
+                        }, 'https://share.streampixel.io');
 
                 console.log('Sent to Unreal:', participantId);
             }
