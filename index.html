@@ -22,31 +22,31 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const participantId = urlParams.get('participant_id') || 'NO_ID';
-        const iframe = document.getElementById('streamIframe');
 
-        streamIframe.addEventListener('click', () => {
-            streamIframe.focus(); // Pass keyboard focus to the iframe on user interaction
-        });
-        console.log('Detected participant_id:', participantId);
+
+         console.log('Detected participant_id:', participantId);
 
         function sendParticipantId() {
 
 
 
-
                 if (iframe && iframe.contentWindow && participantId !== 'NO_ID') {
                     // Wrapped in "message" key — this triggers the descriptor input event in Unreal
-                    iframe.contentWindow.postMessage({
-                        message: {
-                            participant_id: participantId   // Or { type: 'participant_id', value: participantId } if needed
-                        }
-                    }, 'https://share.streampixel.io');
+                   sendMessageToIframe(participantId);
 
                     console.log('Sent wrapped message to Unreal:', participantId);
                 }
         }
 
-        
+        const sendMessageToIframe = (message) => {
+            const iframe = document.getElementById('streamIframe');
+            if (iframe) {
+                iframe.contentWindow.postMessage(message, 'https://share.streampixel.io');
+            }
+        };
+
+// Example: Send the muteAudio command
+sendMessageToIframe({ message: 'muteAudio' });
         window.addEventListener('message', (event) => {
             // Validate the message source for security
             if (event.origin === 'https://share.streampixel.io') {
@@ -59,6 +59,12 @@
 
                 if (event.data.value === 'loadingComplete'){
                     console.log('Received loading complete');
+                    const iframe = document.getElementById('streamIframe');
+                        streamIframe.addEventListener('click', () => {
+                            streamIframe.focus(); // Pass keyboard focus to the iframe on user interaction
+                        });
+                        
+                        
                     sendParticipantId(); 
                 }
 
