@@ -10,40 +10,67 @@
     </style>
 </head>
 <body>
-    <iframe id="streamPixelPlayer" 
-            src="https://share.streampixel.io/69263b754a9ae9b3797f3c6e" 
-            allow="autoplay; fullscreen; accelerometer; gyroscope; magnetometer">
+    <iframe
+        id="streamIframe"
+        src="https://share.streampixel.io/69263b754a9ae9b3797f3c6e" 
+        allow="autoplay; fullscreen"
+        width="100%"
+        height="100%"
+        frameborder="0"
+        allowfullscreen
+        style="border: none;">
     </iframe>
-
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const participantId = urlParams.get('participant_id') || 'NO_ID';
+        const iframe = document.getElementById('streamIframe');
 
+        streamIframe.addEventListener('click', () => {
+            streamIframe.focus(); // Pass keyboard focus to the iframe on user interaction
+        });
         console.log('Detected participant_id:', participantId);
 
         function sendParticipantId() {
-            const iframe = document.getElementById('streamPixelPlayer');
-            if (iframe && iframe.contentWindow && participantId !== 'NO_ID') {
-                // Wrapped in "message" key — this triggers the descriptor input event in Unreal
-                iframe.contentWindow.postMessage({
-                    message: {
-                        participant_id: participantId   // Or { type: 'participant_id', value: participantId } if needed
-                    }
-                }, 'https://share.streampixel.io');
 
-                console.log('Sent wrapped message to Unreal:', participantId);
+
+            if (event.origin !== 'https://share.streampixel.io') return;
+            if (event.data?.type === 'stream-state' && event.data?.value === 'connected') {
+
+
+                if (iframe && iframe.contentWindow && participantId !== 'NO_ID') {
+                    // Wrapped in "message" key — this triggers the descriptor input event in Unreal
+                    iframe.contentWindow.postMessage({
+                        message: {
+                            participant_id: participantId   // Or { type: 'participant_id', value: participantId } if needed
+                        }
+                    }, 'https://share.streampixel.io');
+
+                    console.log('Sent wrapped message to Unreal:', participantId);
+                }
             }
         }
 
-        window.addEventListener('load', sendParticipantId);
-
-        window.addEventListener('message', (event) => {
-            if (event.origin !== 'https://share.streampixel.io') return;
-            if (event.data?.type === 'stream-state' && event.data?.value === 'connected') {
-                console.log('Stream connected - resending ID');
+        window.addEventListener('loadingComplete', (event)=> {
+                console.log('Received loading complete');
                 sendParticipantId();
-            }
+
         });
+
+        window.addEventListener('authenticating', (event)=> {
+                console.log('Received authenticating');
+
+        });
+
+                window.addEventListener('finalising', (event)=> {
+                console.log('Received finalising');
+
+        });
+
+                window.addEventListener('connecting', (event)=> {
+                console.log('Received connecting');
+
+        });
+
     </script>
 </body>
 </html>
