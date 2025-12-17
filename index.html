@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persuasive Agent Study</title>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: black; }
+        iframe { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+    <iframe id="streamPixelPlayer" 
+            src="https://share.streampixel.io/69263b754a9ae9b3797f3c6e" 
+            allow="autoplay; fullscreen; accelerometer; gyroscope; magnetometer">
+    </iframe>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const participantId = urlParams.get('participant_id') || 'NO_ID';
+
+        console.log('Detected participant_id:', participantId);
+
+        function sendParticipantId() {
+            const iframe = document.getElementById('streamPixelPlayer');
+            if (iframe && iframe.contentWindow && participantId !== 'NO_ID') {
+                // Plain object — forwarded directly as descriptor JSON to Unreal
+                iframe.contentWindow.postMessage({
+                    participant_id: participantId  // Direct key for easy parsing; or use { type: 'participant_id', value: participantId }
+                }, 'https://share.streampixel.io');
+
+                console.log('Sent to Unreal:', participantId);
+            }
+        }
+
+        window.addEventListener('load', sendParticipantId);
+
+        window.addEventListener('message', (event) => {
+            if (event.origin !== 'https://share.streampixel.io') return;
+            if (event.data?.type === 'stream-state' && event.data?.value === 'connected') {
+                console.log('Stream connected - resending ID');
+                sendParticipantId();
+            }
+        });
+    </script>
+</body>
+</html>
