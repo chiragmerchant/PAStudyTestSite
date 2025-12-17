@@ -45,8 +45,6 @@
             }
         };
 
-// Example: Send the muteAudio command
-sendMessageToIframe({ message: 'muteAudio' });
         window.addEventListener('message', (event) => {
             // Validate the message source for security
             if (event.origin === 'https://share.streampixel.io') {
