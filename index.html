@@ -24,13 +24,14 @@
         function sendParticipantId() {
             const iframe = document.getElementById('streamPixelPlayer');
             if (iframe && iframe.contentWindow && participantId !== 'NO_ID') {
-                // Plain object — forwarded directly as descriptor JSON to Unreal
-                iframe.contentWindow.postMessage(
-                    JSON.stringify({ participant_id: participantId }),
-                    'https://share.streampixel.io'
-                );
+                // Wrapped in "message" key — this triggers the descriptor input event in Unreal
+                iframe.contentWindow.postMessage({
+                    message: {
+                        participant_id: participantId   // Or { type: 'participant_id', value: participantId } if needed
+                    }
+                }, 'https://share.streampixel.io');
 
-                console.log('Sent to Unreal:', participantId);
+                console.log('Sent wrapped message to Unreal:', participantId);
             }
         }
 
