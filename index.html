@@ -17,7 +17,6 @@
         width="100%"
         height="100%"
         frameborder="0"
-        allowfullscreen
         style="border: none;">
     </iframe>
     <script>
@@ -50,25 +49,35 @@
             }
         }
 
-        window.addEventListener('loadingComplete', (event)=> {
-                console.log('Received loading complete');
-                sendParticipantId();
+        
+        window.addEventListener('message', (event) => {
+            // Validate the message source for security
+            if (event.origin === 'https://share.streampixel.io') {
+                console.log('Message received:', event.data);
 
-        });
+                // Example: Handle stream-state updates
+                if (event.data.type === 'stream-state') {
+                    console.log('Stream state:', event.data.value); // e.g., 'loadingComplete'
+                }
 
-        window.addEventListener('authenticating', (event)=> {
-                console.log('Received authenticating');
+                if (event.data.value === 'loadingComplete'){
+                    console.log('Received loading complete');
+                    sendParticipantId(); 
+                }
 
-        });
+                
 
-                window.addEventListener('finalising', (event)=> {
-                console.log('Received finalising');
+                if (event.data.value === 'authenticating'){
+                    console.log('Received authenticating');
+                }
 
-        });
+                
 
-                window.addEventListener('connecting', (event)=> {
-                console.log('Received connecting');
+                if (event.data.value === 'finalising'){
+                    console.log('Received finalising');
+                }
 
+            }
         });
 
     </script>
