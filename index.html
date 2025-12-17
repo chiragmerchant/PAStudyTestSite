@@ -32,8 +32,6 @@
         function sendParticipantId() {
 
 
-            if (event.origin !== 'https://share.streampixel.io') return;
-            if (event.data?.type === 'stream-state' && event.data?.value === 'connected') {
 
 
                 if (iframe && iframe.contentWindow && participantId !== 'NO_ID') {
@@ -46,7 +44,6 @@
 
                     console.log('Sent wrapped message to Unreal:', participantId);
                 }
-            }
         }
 
         
