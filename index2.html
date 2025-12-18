@@ -42,7 +42,7 @@
             const iframe = document.getElementById('streamIframe');
             if (iframe && iframe.contentWindow) {
                 iframe.contentWindow.postMessage({
-                    test: participantId   // Use their "test" key — arrives as {"test":"0lh_testbrowser"}
+                    message: { userID: '0hl_test'}   // Use their "test" key — arrives as {"test":"0lh_testbrowser"}
                     // Or { participant_id: participantId } once it works
                 }, 'http://localhost');
 

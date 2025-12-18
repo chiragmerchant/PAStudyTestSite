@@ -37,7 +37,7 @@
         const sendMessageToIframe = (message) => {
             const iframe = document.getElementById('streamIframe');
             if (iframe && iframe.contentWindow) {
-                iframe.contentWindow.postMessage(message, '*');
+                iframe.contentWindow.postMessage(message, 'https://share.streampixel.io');
             }
         };
 
@@ -45,7 +45,7 @@
 
         window.addEventListener('message', (event) => {
             // Validate the message source for security
-            // if (event.origin === 'https://share.streampixel.io') {
+            if (event.origin === 'https://share.streampixel.io') {
                 console.log('Message received:', event.data);
 
                 // Example: Handle stream-state updates
@@ -73,7 +73,7 @@
                     console.log('Received finalising');
                 }
 
-            // }
+            }
         });
 
     </script>
