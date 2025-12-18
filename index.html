@@ -23,36 +23,29 @@
         const urlParams = new URLSearchParams(window.location.search);
         const participantId = urlParams.get('participant_id') || 'NO_ID';
 
-
+        const iframe = document.getElementById('streamIframe');
+            streamIframe.addEventListener('click', () => {
+                streamIframe.focus(); // Pass keyboard focus to the iframe on user interaction
+            });
          console.log('Detected participant_id:', participantId);
 
         function sendParticipantId() {
-            sendMessageToIframe(participantId);
+            sendMessageToIframe({message: {userID: participantId}});
             console.log('Sent wrapped message to Unreal:', participantId);
         }
 
-        // const sendMessageToIframe = (message) => {
-        //     const iframe = document.getElementById('streamIframe');
-        //     if (iframe && iframe.contentWindow) {
-        //         iframe.contentWindow.postMessage(message, 'https://share.streampixel.io');
-        //     }
-        // };
-
-        const sendMessageToIframe = () => {
+        const sendMessageToIframe = (message) => {
             const iframe = document.getElementById('streamIframe');
             if (iframe && iframe.contentWindow) {
-                iframe.contentWindow.postMessage({
-                    test: participantId   // Use their "test" key — arrives as {"test":"0lh_testbrowser"}
-                    // Or { participant_id: participantId } once it works
-                }, 'https://share.streampixel.io');
-
-                console.log('Sent plain custom object (test key):', participantId);
+                iframe.contentWindow.postMessage(message, '*');
             }
         };
 
+  
+
         window.addEventListener('message', (event) => {
             // Validate the message source for security
-            if (event.origin === 'https://share.streampixel.io') {
+            // if (event.origin === 'https://share.streampixel.io') {
                 console.log('Message received:', event.data);
 
                 // Example: Handle stream-state updates
@@ -62,10 +55,7 @@
 
                 if (event.data.value === 'loadingComplete'){
                     console.log('Received loading complete');
-                    const iframe = document.getElementById('streamIframe');
-                        streamIframe.addEventListener('click', () => {
-                            streamIframe.focus(); // Pass keyboard focus to the iframe on user interaction
-                        });
+
                         
                         
                     sendParticipantId(); 
@@ -83,7 +73,7 @@
                     console.log('Received finalising');
                 }
 
-            }
+            // }
         });
 
     </script>
