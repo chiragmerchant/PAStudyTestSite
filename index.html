@@ -31,10 +31,22 @@
             console.log('Sent wrapped message to Unreal:', participantId);
         }
 
-        const sendMessageToIframe = (message) => {
+        // const sendMessageToIframe = (message) => {
+        //     const iframe = document.getElementById('streamIframe');
+        //     if (iframe && iframe.contentWindow) {
+        //         iframe.contentWindow.postMessage(message, 'https://share.streampixel.io');
+        //     }
+        // };
+
+        const sendMessageToIframe = () => {
             const iframe = document.getElementById('streamIframe');
             if (iframe && iframe.contentWindow) {
-                iframe.contentWindow.postMessage(message, 'https://share.streampixel.io');
+                iframe.contentWindow.postMessage({
+                    test: participantId   // Use their "test" key — arrives as {"test":"0lh_testbrowser"}
+                    // Or { participant_id: participantId } once it works
+                }, 'https://share.streampixel.io');
+
+                console.log('Sent plain custom object (test key):', participantId);
             }
         };
 
