@@ -42,8 +42,7 @@
             const iframe = document.getElementById('streamIframe');
             if (iframe && iframe.contentWindow) {
                 iframe.contentWindow.postMessage({
-                    message: { userID: '0hl_test'}   // Use their "test" key — arrives as {"test":"0lh_testbrowser"}
-                    // Or { participant_id: participantId } once it works
+                    participant_id: participantId  
                 }, 'http://localhost');
 
                 console.log('Sent plain custom object (test key):', participantId);
