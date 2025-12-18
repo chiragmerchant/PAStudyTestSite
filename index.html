@@ -46,6 +46,7 @@
             if (streamIframe && streamIframe.contentWindow) {
                 streamIframe.contentWindow.postMessage(message, 'https://share.streampixel.io');
                 console.log('Sent JSON message to Unreal:', message);
+                streamIframe.focus();
 
             }
         };
