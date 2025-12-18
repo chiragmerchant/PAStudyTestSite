@@ -21,7 +21,7 @@
     </iframe>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const participantId = urlParams.get('participant_id') || 'NO_ID';
+        const participantId = urlParams.get('participant_id') ;
 
         const streamIframe = document.getElementById('streamIframe');
         streamIframe.addEventListener('click', () => {
