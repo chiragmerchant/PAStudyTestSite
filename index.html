@@ -30,7 +30,7 @@
          console.log('Detected participant_id:', participantId);
 
         function sendParticipantId() {
-            sendMessageToIframe({message: {userID: participantId}});
+            sendMessageToIframe({participant_id: participantId});
             console.log('Sent wrapped message to Unreal:', participantId);
         }
 
