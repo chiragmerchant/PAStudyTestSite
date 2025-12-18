@@ -19,35 +19,38 @@
         frameborder="0"
         style="border: none;">
     </iframe>
-    <script>
+   <script>
         const urlParams = new URLSearchParams(window.location.search);
         const participantId = urlParams.get('participant_id') || 'NO_ID';
 
-
+        const streamIframe = document.getElementById('streamIframe');
+        streamIframe.addEventListener('click', () => {
+            streamIframe.focus(); // Pass keyboard focus to the iframe on user interaction
+        });
          console.log('Detected participant_id:', participantId);
 
         function sendParticipantId() {
-            sendMessageToIframe(participantId);
+            sendMessageToIframe({participant_id: participantId});
+
+            // streamIframe.contentWindow.postMessage({ message: 'terminateSession' }, '*'); // Terminate the session
+            // streamIframe.contentWindow.postMessage({ message: 'heartbeat' }, '*'); // Send a heartbeat
+            // streamIframe.contentWindow.postMessage({ customField: 'customValue' }, '*'); // Send custom data
+
             console.log('Sent wrapped message to Unreal:', participantId);
         }
 
-        // const sendMessageToIframe = (message) => {
-        //     const iframe = document.getElementById('streamIframe');
-        //     if (iframe && iframe.contentWindow) {
-        //         iframe.contentWindow.postMessage(message, 'https://share.streampixel.io');
-        //     }
-        // };
+        const sendMessageToIframe = (message) => {
+            streamIframe.contentWindow.postMessage({ message: { value: '720p (1280x720)', type: 'setResolution' } }, '*'); // Set resolution
+            streamIframe.contentWindow.postMessage({ message: 'muteAudio' }, '*'); // Mute the stream
+            streamIframe.contentWindow.postMessage({ message: 'unMuteAudio' }, '*'); // Unmute the stream
+            if (streamIframe && streamIframe.contentWindow) {
+                streamIframe.contentWindow.postMessage(message, 'http://localhost');
+                console.log('Sent JSON message to Unreal:', message);
 
-        const sendMessageToIframe = () => {
-            const iframe = document.getElementById('streamIframe');
-            if (iframe && iframe.contentWindow) {
-                iframe.contentWindow.postMessage({
-                    participant_id: participantId  
-                }, 'http://localhost');
-
-                console.log('Sent plain custom object (test key):', participantId);
             }
         };
+
+  
 
         window.addEventListener('message', (event) => {
             // Validate the message source for security
@@ -61,10 +64,7 @@
 
                 if (event.data.value === 'loadingComplete'){
                     console.log('Received loading complete');
-                    const iframe = document.getElementById('streamIframe');
-                        streamIframe.addEventListener('click', () => {
-                            streamIframe.focus(); // Pass keyboard focus to the iframe on user interaction
-                        });
+
                         
                         
                     sendParticipantId(); 
