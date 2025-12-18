@@ -38,6 +38,8 @@
             const iframe = document.getElementById('streamIframe');
             if (iframe && iframe.contentWindow) {
                 iframe.contentWindow.postMessage(message, 'https://share.streampixel.io');
+                console.log('Sent JSON message to Unreal:', message);
+
             }
         };
 
