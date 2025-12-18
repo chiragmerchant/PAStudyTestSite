@@ -40,9 +40,9 @@
         }
 
         const sendMessageToIframe = (message) => {
-            streamIframe.contentWindow.postMessage({ message: { value: '720p (1280x720)', type: 'setResolution' } }, '*'); // Set resolution
-            streamIframe.contentWindow.postMessage({ message: 'muteAudio' }, '*'); // Mute the stream
-            streamIframe.contentWindow.postMessage({ message: 'unMuteAudio' }, '*'); // Unmute the stream
+            // streamIframe.contentWindow.postMessage({ message: { value: '720p (1280x720)', type: 'setResolution' } }, '*'); // Set resolution
+            // streamIframe.contentWindow.postMessage({ message: 'muteAudio' }, '*'); // Mute the stream
+            // streamIframe.contentWindow.postMessage({ message: 'unMuteAudio' }, '*'); // Unmute the stream
             if (streamIframe && streamIframe.contentWindow) {
                 streamIframe.contentWindow.postMessage(message, 'https://share.streampixel.io');
                 console.log('Sent JSON message to Unreal:', message);
