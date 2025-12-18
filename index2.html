@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persuasive Agent Study</title>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: black; }
+        iframe { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+    <iframe
+        id="streamIframe"
+        src="http://localhost/" 
+        allow="autoplay; fullscreen"
+        width="100%"
+        height="100%"
+        frameborder="0"
+        style="border: none;">
+    </iframe>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const participantId = urlParams.get('participant_id') || 'NO_ID';
+
+
+         console.log('Detected participant_id:', participantId);
+
+        function sendParticipantId() {
+            sendMessageToIframe(participantId);
+            console.log('Sent wrapped message to Unreal:', participantId);
+        }
+
+        // const sendMessageToIframe = (message) => {
+        //     const iframe = document.getElementById('streamIframe');
+        //     if (iframe && iframe.contentWindow) {
+        //         iframe.contentWindow.postMessage(message, 'https://share.streampixel.io');
+        //     }
+        // };
+
+        const sendMessageToIframe = () => {
+            const iframe = document.getElementById('streamIframe');
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    test: participantId   // Use their "test" key — arrives as {"test":"0lh_testbrowser"}
+                    // Or { participant_id: participantId } once it works
+                }, 'http://localhost');
+
+                console.log('Sent plain custom object (test key):', participantId);
+            }
+        };
+
+        window.addEventListener('message', (event) => {
+            // Validate the message source for security
+            if (event.origin === 'http://localhost') {
+                console.log('Message received:', event.data);
+
+                // Example: Handle stream-state updates
+                if (event.data.type === 'stream-state') {
+                    console.log('Stream state:', event.data.value); // e.g., 'loadingComplete'
+                }
+
+                if (event.data.value === 'loadingComplete'){
+                    console.log('Received loading complete');
+                    const iframe = document.getElementById('streamIframe');
+                        streamIframe.addEventListener('click', () => {
+                            streamIframe.focus(); // Pass keyboard focus to the iframe on user interaction
+                        });
+                        
+                        
+                    sendParticipantId(); 
+                }
+
+                
+
+                if (event.data.value === 'authenticating'){
+                    console.log('Received authenticating');
+                }
+
+                
+
+                if (event.data.value === 'finalising'){
+                    console.log('Received finalising');
+                }
+
+            }
+        });
+
+    </script>
+</body>
+</html>
